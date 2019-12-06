@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <title>game</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <form name="myform">
+        <input type="text" name="text" id="name" value="">
+        <input type="button" name="btn" value="入力" onclick="sendUserName(document.getElementById('name').value)">
+    </form>
+        <script>
+            var socket = io();
+            var log = '';
+            //var userName = document.getElementById('userName');
+            //var form = document.forms.myform;
+            //form.btn.addEventListener('click', function(e) {
+            //    e.preventDefault();
+            //    socket.emit('chat', form.text.value);
+            //    form.text.value = '';
+            //});
+            //socket.on('message', function(msg) {
+            //    console.log(msg);
+            //});
+            function sendUserName(name) {
+                socket.emit('userName', name);
+                console.log('name:', name);
+            }
+            socket.on('log', function(msg) {
+                console.log(msg);
+                document.getElementById('attack').style.visibility = 'visible';
+                document.getElementById('defense').style.visibility = 'visible';
+                document.getElementById('escape').style.visibility = 'visible';
+                log = '<p id="log">' + msg + '</p>' + log;
+                document.getElementById('wait').innerHTML = '<div id="wait"></div>';
+                document.getElementById('log').innerHTML = log;
+            });
+        </script>
+        <form id="comform">
+            <script>
+                function sendCommand(com) {
+                    socket.emit('command', com);
+                    // document.getElementById('escape').value = '逃げない';
+                    document.getElementById('attack').style.visibility = 'hidden';
+                    document.getElementById('defense').style.visibility = 'hidden';
+                    document.getElementById('escape').style.visibility = 'hidden';
+                    document.getElementById('wait').innerHTML = '<p id="wait">相手の選択を待っています…</p>';
+                }
+            </script>
+            <input type="button" id="attack" value="攻撃" onclick="sendCommand(this.id)">
+            <input type="button" id="defense" value="防御" onclick="sendCommand(this.id)">
+            <input type="button" id="escape" value="逃げる" onclick="sendCommand(this.id)">
+            <div id="wait"></div>
+            <hr>
+            <p id="log"></p>
+        </form>
+        <link rel="stylesheet" type="text/" href="./style.css">
+</body>
+</script>
+</html>
+
