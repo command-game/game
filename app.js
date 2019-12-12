@@ -37,10 +37,17 @@ io.on('connection', function(socket) {
         usersData[num].com = command;
         console.log(command, usersData[num].name);
         if (commandCheck() == 1) {
-            for (i = 0; i < 2; i++) {
-                io.emit('log', makeMessage(usersData[i].id, usersData[i].com));
-                usersData[i].com = null;
-            } 
+            //for (i = 0; i < 2; i++) {
+            //    io.emit('log', makeMessage(usersData[i].id, usersData[i].com));
+            //    usersData[i].com = null;
+            //} 
+            io.emit('log', makeMessage(usersData[0].id, usersData[0].com));
+            usersData[0].com = null;
+            sleep(1, function () {
+                io.emit('log', makeMessage(usersData[1].id, usersData[1].com));
+                usersData[1].com = null;
+            });
+
         }
     });
 });
@@ -96,4 +103,18 @@ function makeMessage(id, command) {
         case 'escape':
             return name + 'は逃げ出した！';
     }
+}
+
+// waitSec秒待ってからcallback関数を呼び出し
+function sleep(waitSec, callbackFunc) {
+    var spanedSec = 0;
+    var id = setInterval(function () {
+        spanedSec += 0.1;
+        if (spanedSec >= waitSec) {
+            clearInterval(id);
+            if (callbackFunc) {
+                callbackFunc();
+            }
+        }
+    }, 100);
 }
