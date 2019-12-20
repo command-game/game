@@ -6,12 +6,31 @@ const PORT = process.env.PORT || 3000;
 
 var connectedUser = 0;
 var usersData = [];
+var messageBox = [];
+var messageNum = 0;
+var gameEnd = false;
+
+var status = {
+    maxHP: 100
+    /* 
+        MP マジックポイント
+        ATK 攻撃力
+        STR 力
+        VIT 生命力
+        DEF 防御力
+        INT 知力
+        DEX 器用さ
+        AGI 素早さ
+        LUK 運
+    */
+};
 
 for (i = 0; i < 2; i++) {
     usersData[i] = {
         id: null,
         name: null,
-        com: null
+        com: null,
+        HP: status.maxHP
     };
 }
 
@@ -40,14 +59,36 @@ io.on('connection', function(socket) {
             //for (i = 0; i < 2; i++) {
             //    io.emit('log', makeMessage(usersData[i].id, usersData[i].com));
             //    usersData[i].com = null;
-            //} 
-            io.emit('log', makeMessage(usersData[0].id, usersData[0].com));
-            usersData[0].com = null;
-            sleep(1, function () {
-                io.emit('log', makeMessage(usersData[1].id, usersData[1].com));
-                usersData[1].com = null;
-            });
+            //}             
 
+            for (i = 0; i < 2; i++) {
+                if (gameEnd != true) {
+                    addMessage(makeMessage(usersData[i].id));
+                    for (j = 0; j < 2 && gameEnd == false; j++) {
+                        if (usersData[i].HP <= 0) {
+                            console.log(usersData[i].name + 'は力尽きた');
+                            addMessage(usersData[i].name + 'は力尽きた');
+                            addMessage(usersData[(i+1)%2].name + 'の勝利！');
+                            gameEnd = true;
+                        }
+                    }
+                }
+                usersData[i].com = null;
+            }
+            sendLog(1000);    // 1秒間隔でメッセージを送信
+
+            //io.emit('log', makeMessage(usersData[0].id, usersData[0].com));
+            //usersData[0].com = null;
+            //sleep(1, function () {
+            //    io.emit('log', makeMessage(usersData[1].id, usersData[1].com));
+            //    usersData[1].com = null;
+            //});
+            //for (i = 0; i < 2; i++) {
+            //    if (usersData[i].HP <= 0) {
+            //        console.log(usersData[i].name + 'は力尽きた');
+            //        io.emit('log', usersData[i].name + 'は力尽きた')
+            //    }
+            //}
         }
     });
 });
@@ -93,16 +134,22 @@ function commandCheck() {
 }
 
 // 名前とコマンドからメッセージを生成
-function makeMessage(id, command) {
+function makeMessage(id) {
     var name = usersData[userNumber(id)].name;
+    var command = usersData[userNumber(id)].com;
     switch (command) {
         case 'attack':
+            attack(id);
             return name + 'の攻撃！';
         case 'defense':
             return name + 'は身を守っている…';
         case 'escape':
             return name + 'は逃げ出した！';
     }
+}
+
+function attack(id) {
+    usersData[(userNumber(id) + 1) % 2].HP -= 20;
 }
 
 // waitSec秒待ってからcallback関数を呼び出し
@@ -117,4 +164,24 @@ function sleep(waitSec, callbackFunc) {
             }
         }
     }, 100);
+}
+
+// メッセージを格納
+function addMessage(msg) {
+    if (gameEnd == false) {
+        messageBox[messageNum++] = msg;
+    }
+}
+
+// メッセージを一定の時間間隔で送信
+function sendLog(interval) {
+    var count = 0;
+    var intervalId = setInterval(function () {
+        if (count >= messageNum) {
+            messageNum = 0;
+            clearInterval(intervalId);
+        }
+        io.emit('log', messageBox[count]);
+        messageBox[count++] = null;
+    }, interval);
 }
