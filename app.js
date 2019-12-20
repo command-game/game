@@ -183,8 +183,9 @@ function sendLog(interval) {
         if (count >= messageNum) {
             messageNum = 0;
             clearInterval(intervalId);
+        } else {
+            io.emit('log', messageBox[count]);
+            messageBox[count++] = null;
         }
-        io.emit('log', messageBox[count]);
-        messageBox[count++] = null;
     }, interval);
 }
