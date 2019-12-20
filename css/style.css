@@ -1,0 +1,84 @@
+body {
+    background-color: rgb(219, 255, 243);
+}
+
+#bt {
+    visibility: visible;
+
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: white;
+    border: solid 2px white;
+    border-radius: 3px;
+    background: black;
+}
+
+#bt:hover {
+    background: black;
+    color: yellow;
+  }
+
+
+#attack {
+    visibility: visible;
+
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: white;
+    border: solid 2px white;
+    border-radius: 3px;
+    background: black;
+}
+
+#attack:hover {
+    background: black;
+    color: yellow;
+  }
+
+#defense {
+    visibility: visible;
+
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: white;
+    border: solid 2px white;
+    border-radius: 3px;
+    background: black;
+}
+
+#defense:hover {
+    background: black;
+    color: yellow;
+  }
+
+#escape {
+    visibility: visible;
+
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: white;
+    border: solid 2px white;
+    border-radius: 3px;
+    background: black;
+}
+
+#escape:hover {
+    background: black;
+    color: yellow;
+  }
+
+  #log {
+    width: 100%;
+    padding-right: 2px;
+    margin: 0 auto;
+    font-size: 1.2rem;
+    color: #FFF;
+    border: 2px solid #000;
+    border-radius: 5px;
+    box-shadow: 0 0 0 3px #FFF inset;
+    background-color: rgba(0,0,0,0.9);
+  }
