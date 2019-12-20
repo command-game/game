@@ -3,11 +3,12 @@
 <head>
     <title>game</title>
     <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
     <form name="myform">
         <input type="text" name="text" id="name" value="">
-        <input type="button" name="btn" value="入力" onclick="sendUserName(document.getElementById('name').value)">
+        <input type="button" name="btn" id="bt" value="入力" onclick="sendUserName(document.getElementById('name').value)">
     </form>
         <script>
             var socket = io();
@@ -54,7 +55,7 @@
             <hr>
             <p id="log"></p>
         </form>
-        <link rel="stylesheet" type="text/" href="./style.css">
+        <!-- <link rel="stylesheet" type="text/" href="./style.css"> -->
 </body>
 </script>
 </html>
