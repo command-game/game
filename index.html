@@ -36,6 +36,18 @@
                 document.getElementById('wait').innerHTML = '<div id="wait"></div>';
                 document.getElementById('log').innerHTML = log;
             });
+            socket.on('end', function(winner, loser) {
+                var form = document.createElement('form');
+                var request = document.createElement('input');
+                form.method = 'POST';
+                form.action = '/result';
+                request.type = 'hidden';
+                request.winner = winner;
+                request.loser = loser;
+                form.appendChild(request);
+                document.body.appendChild(form);
+                form.submit();
+            });
         </script>
         <form id="comform">
             <script>

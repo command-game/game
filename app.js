@@ -10,6 +10,7 @@ var usersData = [];
 var messageBox = [];
 var messageNum = 0;
 var gameEnd = false;
+var winner;
 
 var status = {
     maxHP: 100
@@ -37,6 +38,10 @@ for (i = 0; i < 2; i++) {
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
+});
+
+app.post('/result', function(req, res) {
+    res.sendFile(__dirname + '/result.html');
 });
 
 io.on('connection', function(socket) {
@@ -70,6 +75,7 @@ io.on('connection', function(socket) {
                             console.log(usersData[i].name + 'は力尽きた');
                             addMessage(usersData[i].name + 'は力尽きた');
                             addMessage(usersData[(i+1)%2].name + 'の勝利！');
+                            winner = (i+1)%2;
                             gameEnd = true;
                         }
                     }
@@ -77,6 +83,9 @@ io.on('connection', function(socket) {
                 usersData[i].com = null;
             }
             sendLog(1000);    // 1秒間隔でメッセージを送信
+            if (gameEnd == true) {
+                io.emit('end', usersData[winner].name, usersData[(winner+1)%2].name);
+            }
 
             //io.emit('log', makeMessage(usersData[0].id, usersData[0].com));
             //usersData[0].com = null;
@@ -171,9 +180,7 @@ function sleep(waitSec, callbackFunc) {
 
 // メッセージを格納
 function addMessage(msg) {
-    if (gameEnd == false) {
-        messageBox[messageNum++] = msg;
-    }
+    messageBox[messageNum++] = msg;
 }
 
 // メッセージを一定の時間間隔で送信
