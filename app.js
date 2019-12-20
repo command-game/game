@@ -3,6 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 const io = require('socket.io')(http);
 const PORT = process.env.PORT || 3000;
+const path = require('path');//1211
 
 var connectedUser = 0;
 var usersData = [];
@@ -96,6 +97,8 @@ io.on('connection', function(socket) {
 http.listen(PORT, function() {
     console.log('server listening. Port:' + PORT);
 });
+
+app.use(express.static(path.join(__dirname, 'css')));//1211
 
 // ユーザIDとユーザ名の紐づけ
 function getUserName(userId, userName) {
